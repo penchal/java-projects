@@ -1,6 +1,7 @@
 package com.smc.restlet.mailserver.server;
 
 import org.restlet.Application;
+import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.Server;
@@ -10,25 +11,24 @@ import org.restlet.routing.Template;
 
 public class MailServerApplicationRoutersAndRestlets extends Application {
 
-  //  public static void main(String[] args) throws Exception {
-  //	Server mailServer = new Server(Protocol.HTTP, 8111);
-  //	mailServer.setNext(new MailServerApplicationRoutersAndRestlets());
-  //
-  //	mailServer.setName("My Mail Server");
-  //	mailServer.setAuthor("smc");
-  //
-  //	mailServer.start();
-  //  }
+  public static void main(String[] args) throws Exception {
+	Component component = new Component();
+	component.getServers().add(Protocol.HTTP, 8111);
+	
+	// Attach the application to the component and start it
+	component.getDefaultHost().attach(new MailServerApplication());
+	component.start();
+}
 
-  @Override
-  public Restlet createInboundRoot() {
+@Override
+public Restlet createInboundRoot() {
 	Context context = getContext();
 
 	AdminFilterRestlet adminFilterRestlet = new AdminFilterRestlet(context);
 	ClientInfoRestlet clientInfoRestlet = new ClientInfoRestlet(context);
 
 	IpAddressBlockingFilterRestlet ipAddressFilterRestlet = new IpAddressBlockingFilterRestlet(
-	    context);
+			context);
 	ipAddressFilterRestlet.setNext(clientInfoRestlet);
 	ipAddressFilterRestlet.getBlacklistedIps().add("127.0.0.1");
 
@@ -36,14 +36,13 @@ public class MailServerApplicationRoutersAndRestlets extends Application {
 	// return adminFilterRestlet;
 	// return clientInfoRestlet;
 
-	 Router router = new Router(context);
-	 router.setDefaultMatchingMode(Template.MODE_EQUALS);
-	 router.attach("http://localhost/", clientInfoRestlet);
-	 router.attach("http://localhost/admin", adminFilterRestlet);
-	 router.attach("http://localhost/client", clientInfoRestlet);
-	 router.attach("http://localhost/filter", ipAddressFilterRestlet);
-	
-	 return router;
-  }
+	Router router = new Router(context);
+	router.setDefaultMatchingMode(Template.MODE_EQUALS);
+	router.attach("/", clientInfoRestlet);
+	router.attach("/admin", adminFilterRestlet);
+	router.attach("/client", clientInfoRestlet);
+	router.attach("/filter", ipAddressFilterRestlet);
 
+	return router;
+}
 }
