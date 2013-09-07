@@ -24,26 +24,10 @@ public class MailServerApplication extends Application {
   public Restlet createInboundRoot() {
 	Context context = getContext();
 
-	AdminFilterRestlet adminFilterRestlet = new AdminFilterRestlet(context);
-	ClientInfoRestlet clientInfoRestlet = new ClientInfoRestlet(context);
+	Router router = new Router(context);
+	router.attach("http://localhost/", RootServerResource.class);
 
-	IpAddressBlockingFilterRestlet ipAddressFilterRestlet = new IpAddressBlockingFilterRestlet(
-	    context);
-	ipAddressFilterRestlet.setNext(clientInfoRestlet);
-	ipAddressFilterRestlet.getBlacklistedIps().add("127.0.0.1");
-
-	// return ipAddressFilterRestlet;
-	// return adminFilterRestlet;
-	// return clientInfoRestlet;
-
-	 Router router = new Router(context);
-	 router.setDefaultMatchingMode(Template.MODE_EQUALS);
-	 router.attach("http://localhost/", clientInfoRestlet);
-	 router.attach("http://localhost/admin", adminFilterRestlet);
-	 router.attach("http://localhost/client", clientInfoRestlet);
-	 router.attach("http://localhost/filter", ipAddressFilterRestlet);
-	
-	 return router;
+	return router;
   }
 
 }
