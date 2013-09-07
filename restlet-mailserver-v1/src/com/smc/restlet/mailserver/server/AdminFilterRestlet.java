@@ -12,6 +12,7 @@ public class AdminFilterRestlet extends Filter {
 	super(context);
   }
   
+  @Override
   public int beforeHandle(Request request, Response response) {
 	response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
 	return STOP;
