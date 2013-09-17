@@ -14,8 +14,9 @@ public class RootServerResource extends ServerResource {
 
   public RootServerResource() {
 	setNegotiated(false);
+	setExisting(true);
 	LOGGER = Logger.getLogger(this.getClass().getName() + "-"
-	    + (new Date()).getTime());
+	    + new Date().getTime());
   }
 
   @Override
