@@ -13,13 +13,16 @@
  * permissions and limitations under the License.
  */
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Date;
 import java.util.UUID;
 
 import com.amazonaws.AmazonClientException;
@@ -35,6 +38,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 /**
@@ -103,42 +107,13 @@ public class S3Sample {
              * specific to your applications.
              */
             System.out.println("Uploading a new object to S3 from a file\n");
-            s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile()));
+            File createSampleFile = createSampleFile();
+            System.out.println("canonical: " + createSampleFile.getCanonicalPath());
+            System.out.println("abs: " + createSampleFile.getAbsolutePath());
+            System.out.println("name: " + createSampleFile.getName());
+            key = createSampleFile.getName();
+			s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile));
 
-            /*
-             * Download an object - When you download an object, you get all of
-             * the object's metadata and a stream from which to read the contents.
-             * It's important to read the contents of the stream as quickly as
-             * possibly since the data is streamed directly from Amazon S3 and your
-             * network connection will remain open until you read all the data or
-             * close the input stream.
-             *
-             * GetObjectRequest also supports several other options, including
-             * conditional downloading of objects based on modification times,
-             * ETags, and selectively downloading a range of an object.
-             */
-            System.out.println("Downloading an object");
-            S3Object object = s3.getObject(new GetObjectRequest(bucketName, key));
-            System.out.println("Content-Type: "  + object.getObjectMetadata().getContentType());
-            displayTextInputStream(object.getObjectContent());
-
-            /*
-             * List objects in your bucket by prefix - There are many options for
-             * listing the objects in your bucket.  Keep in mind that buckets with
-             * many objects might truncate their results when listing their objects,
-             * so be sure to check if the returned object listing is truncated, and
-             * use the AmazonS3.listNextBatchOfObjects(...) operation to retrieve
-             * additional results.
-             */
-            System.out.println("Listing objects");
-            ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                    .withBucketName(bucketName)
-                    .withPrefix("My"));
-            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-                System.out.println(" - " + objectSummary.getKey() + "  " +
-                                   "(size = " + objectSummary.getSize() + ")");
-            }
-            System.out.println();
 
             /*
              * Delete an object - Unless versioning has been turned on for your bucket,
@@ -188,6 +163,7 @@ public class S3Sample {
         writer.write("!@#$%^&*()-=[]{};':',.<>/?\n");
         writer.write("01234567890112345678901234\n");
         writer.write("abcdefghijklmnopqrstuvwxyz\n");
+        writer.write("this file was created on " + new Date());
         writer.close();
 
         return file;
