@@ -9,7 +9,7 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>prod/app.properties</value>
+				<value>${environment}/app.properties</value>
 				<value>common.properties</value>
 				<value></value>
 			</list>
