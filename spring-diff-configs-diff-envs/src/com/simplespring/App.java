@@ -16,9 +16,9 @@ public class App {
   }
 
   public static void main(String[] args) {
-    ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-        "Beans.xml");
-    App app = applicationContext.getBean(App.class);
+    ApplicationContext beanFactory = new ClassPathXmlApplicationContext(
+        "spring.xml");
+    App app = beanFactory.getBean(App.class);
     app.run();
   }
 
