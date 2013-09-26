@@ -5,13 +5,21 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
 
+  private MySampleBean mySampleBean;
+
+  public App(MySampleBean mySampleBean) {
+    this.mySampleBean = mySampleBean;
+  }
+
+  public void run() {
+    System.out.println("To String: " + mySampleBean.toString());
+  }
+
   public static void main(String[] args) {
     ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
         "Beans.xml");
-    MySampleBean bean = applicationContext.getBean(MySampleBean.class);
-
-    System.out.println(bean.getPropToBeInsertedFromPropsFile());
-    System.out.println(bean.getPropToBeInsertedFromXml());
+    App app = applicationContext.getBean(App.class);
+    app.run();
   }
 
 }
