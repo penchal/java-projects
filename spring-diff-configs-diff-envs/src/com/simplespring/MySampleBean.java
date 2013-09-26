@@ -75,11 +75,4 @@ public class MySampleBean {
         + ", password=" + password + "]";
   }
 
-  //
-  //  public MySampleBean(String propToBeInsertedFromXml,
-  //      String prodToBeInsertedFromPropsFile) {
-  //    this.propToBeInsertedFromXml = propToBeInsertedFromXml;
-  //    this.propToBeInsertedFromPropsFile = prodToBeInsertedFromPropsFile;
-  //  }
-
 }

@@ -27,9 +27,6 @@
 	</bean>
 
 	<bean id='App' class="com.simplespring.App">
-		<!-- <property name="mySampleBean">
-			<ref bean='mySampleBean' />
-		</property> -->
 		<constructor-arg ref='mySampleBean'/>
 	</bean>
 
