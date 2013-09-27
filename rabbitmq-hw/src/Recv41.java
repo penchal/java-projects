@@ -4,9 +4,9 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
 /**
- * $ javac -cp rabbitmq-client.jar Send43.java Recv43.java
+ * $ javac -cp rabbitmq-client.jar Send41.java Recv41.java
  * 
- * $ java -cp .:commons-io-1.2.jar:commons-cli-1.1.jar:rabbitmq-client.jar Recv43
+ * $ java -cp .:commons-io-1.2.jar:commons-cli-1.1.jar:rabbitmq-client.jar Recv41
  * 
  * $ rabbitmqctl list_queues
  * $ rabbitmqctl list_bindings
@@ -16,17 +16,17 @@ import com.rabbitmq.client.QueueingConsumer;
  * 
  * New changes:
  * (1) We are trying routing w.t.h.o Direct exchange
- * (2) Gets severities(of logs) as parameters and creates separate queues for each severity
- * (3) Each queue declared will have a random name
- * (4) Binds queues created to the channel
+ * (2) If message has the word-sticky, all workers must receive it
+ * (3) Else only worker must receive it
+ * (4) Each worker subscribes to both "sticky" as well as "" routing key
  * 
- * Run one receiver for one severity for best results
+ * Run 2 receivers
  * 
  * @author smc
  */
-public class Recv4 {
+public class Recv41 {
 
-  private static final String EXCHANGE_DIRECT = "direct_logs";
+  private static final String EXCHANGE_DIRECT = "be-1431";
 
   public static void main(String[] argv) throws java.io.IOException,
       java.lang.InterruptedException {
@@ -36,20 +36,13 @@ public class Recv4 {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
+    // Direct exchange
     channel.exchangeDeclare(EXCHANGE_DIRECT, "direct");
     String queueName = channel.queueDeclare().getQueue();
+    channel.queueBind(queueName, EXCHANGE_DIRECT, "");
 
-    if (argv.length < 1) {
-      System.err.println("Usage: ReceiveLogsDirect [info] [warning] [error]");
-      System.exit(1);
-    }
-
-    for (String arg : argv) {
-      System.out.println(" [*] Waiting for messages of type '" + arg
-          + "'. To exit press CTRL+C");
-      channel.queueBind(queueName, EXCHANGE_DIRECT, arg);
-    }
-
+    // Nameless default exchange
+    channel.queueDeclare("sticky-1431", false, false, false, null);
     QueueingConsumer consumer = new QueueingConsumer(channel);
     channel.basicConsume(queueName, true, consumer);
 

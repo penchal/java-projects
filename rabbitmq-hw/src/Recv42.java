@@ -4,9 +4,9 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
 /**
- * $ javac -cp rabbitmq-client.jar Send43.java Recv43.java
+ * $ javac -cp rabbitmq-client.jar Send41.java Recv41.java
  * 
- * $ java -cp .:commons-io-1.2.jar:commons-cli-1.1.jar:rabbitmq-client.jar Recv43
+ * $ java -cp .:commons-io-1.2.jar:commons-cli-1.1.jar:rabbitmq-client.jar Recv41
  * 
  * $ rabbitmqctl list_queues
  * $ rabbitmqctl list_bindings
@@ -16,17 +16,17 @@ import com.rabbitmq.client.QueueingConsumer;
  * 
  * New changes:
  * (1) We are trying routing w.t.h.o Direct exchange
- * (2) Gets severities(of logs) as parameters and creates separate queues for each severity
- * (3) Each queue declared will have a random name
- * (4) Binds queues created to the channel
+ * (2) If sticky message, all2 workers receive (via "fanout" exchange)
+ * (3) If not, only one worker receives
  * 
- * Run one receiver for one severity for best results
+ * Run 2 receivers
  * 
  * @author smc
  */
-public class Recv4 {
+public class Recv42 {
 
-  private static final String EXCHANGE_DIRECT = "direct_logs";
+  private static final String QUEUE_NAME      = "all3";
+  private static final String EXCHANGE_FANOUT = "fq3";
 
   public static void main(String[] argv) throws java.io.IOException,
       java.lang.InterruptedException {
@@ -36,22 +36,16 @@ public class Recv4 {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    channel.exchangeDeclare(EXCHANGE_DIRECT, "direct");
-    String queueName = channel.queueDeclare().getQueue();
+    //  SETUP
+    // Declare queue
+    channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+    // Fanout exchange
+    channel.exchangeDeclare(EXCHANGE_FANOUT, "fanout");
+    channel.queueBind(QUEUE_NAME, EXCHANGE_FANOUT, "");
 
-    if (argv.length < 1) {
-      System.err.println("Usage: ReceiveLogsDirect [info] [warning] [error]");
-      System.exit(1);
-    }
-
-    for (String arg : argv) {
-      System.out.println(" [*] Waiting for messages of type '" + arg
-          + "'. To exit press CTRL+C");
-      channel.queueBind(queueName, EXCHANGE_DIRECT, arg);
-    }
-
+    // Bind by queue name / routing key
     QueueingConsumer consumer = new QueueingConsumer(channel);
-    channel.basicConsume(queueName, true, consumer);
+    channel.basicConsume(QUEUE_NAME, true, consumer);
 
     while (true) {
       QueueingConsumer.Delivery delivery = consumer.nextDelivery();
