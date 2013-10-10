@@ -1,4 +1,4 @@
-package com.smc.restlet.mailserver.server;
+package com.smc.restlet.mailserver.server.primitives;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;

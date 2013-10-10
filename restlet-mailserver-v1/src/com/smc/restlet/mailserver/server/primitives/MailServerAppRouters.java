@@ -1,4 +1,4 @@
-package com.smc.restlet.mailserver.server;
+package com.smc.restlet.mailserver.server.primitives;
 
 import org.restlet.Application;
 import org.restlet.Component;

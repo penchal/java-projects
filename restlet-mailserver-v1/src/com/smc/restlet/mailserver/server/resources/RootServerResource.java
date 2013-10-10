@@ -1,49 +1,16 @@
-package com.smc.restlet.mailserver.server;
+package com.smc.restlet.mailserver.server.resources;
 
-import java.util.Date;
-import java.util.logging.Logger;
-
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
-import org.restlet.resource.ResourceException;
+import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-public class RootServerResource extends ServerResource {
+import com.smc.restlet.mailserver.common.RootResource;
 
-  private static Logger LOGGER;
-
-  public RootServerResource() {
-	setNegotiated(false);
-	setExisting(true);
-	LOGGER = Logger.getLogger(this.getClass().getName() + "-"
-	    + new Date().getTime());
-  }
+public class RootServerResource extends ServerResource implements RootResource {
 
   @Override
-  public void doInit() {
-	LOGGER.info("doInit()");
-  }
-
-  @Override
-  public void doCatch(Throwable t) {
-	LOGGER.info("Exception in RootServerResource: " + t.getMessage());
-  }
-
-  @Override
-  public void doRelease() {
-	LOGGER.info("doRelease");
-  }
-
-  @Override
-  protected Representation get() {
-	LOGGER.info("get()");
-	return new StringRepresentation("RootServerResource");
-  }
-
-  @Override
-  protected Representation options() throws ResourceException {
-	LOGGER.info("options()");
-	throw new RuntimeException("Not yet implemented");
+  @Get("txt")
+  public String represent() {
+	return "Welcome to " + getApplication().getName() + " !";
   }
 
 }
