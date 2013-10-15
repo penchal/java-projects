@@ -1,5 +1,9 @@
 package com.smc.winetasting;
 
+import java.util.logging.Level;
+
+import com.smc.utils.BloomLogger;
+
 public class Preference {
 
   private String personId;
@@ -21,6 +25,18 @@ public class Preference {
 
   public String getWineId() {
     return wineId;
+  }
+
+  public static Preference fromString(String line) {
+    Preference preference = null;
+    try {
+      preference = new Preference(line);
+    } catch (WineException e) {
+      BloomLogger.log(Level.SEVERE, "Could not parse line: '" + line
+          + "'. Skipping it");
+    }
+
+    return preference;
   }
 
 }

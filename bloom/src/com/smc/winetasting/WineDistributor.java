@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
@@ -18,13 +17,26 @@ public class WineDistributor {
   private Map<String, Set<String>> personToWinesPrefMap = Maps.newHashMap();
   private Map<String, Set<String>> wineToPersonsPrefMap = Maps.newHashMap();
   private String                   filePath;
-  private Set<String>              users                = Sets.newHashSet();
-  private Set<String>              wines                = Sets.newHashSet();
   private Map<String, Set<String>> personToWinesDistMap = Maps.newHashMap();
   private Map<String, Set<String>> wineToPersonsDistMap = Maps.newHashMap();
+  private int                      numSoldWines         = 0;
 
   public WineDistributor(String filePath) {
     this.filePath = filePath;
+  }
+
+  public void readFileSetupData() throws IOException {
+    List<String> lines = FileUtils.readFileIntoLines(filePath);
+    for (String line : lines) {
+      updateMaps(personToWinesPrefMap, wineToPersonsPrefMap,
+          personToWinesDistMap, wineToPersonsDistMap, line);
+    }
+
+    decideDistribution();
+
+    BloomLogger.log("File read. Num lines: " + lines.size());
+    BloomLogger.log("Num uniq users: " + personToWinesPrefMap.keySet().size());
+    BloomLogger.log("Num uniq wines: " + wineToPersonsPrefMap.keySet().size());
   }
 
   public void distribute() throws IOException {
@@ -45,11 +57,37 @@ public class WineDistributor {
     String wineDistFile = "wine-to-persons-distribution.txt";
     FileUtils.writeMapToFile(wineToPersonsDistMap, wineDistFile);
 
+    String bloomFile = "bloomFile.txt";
+    FileUtils.writeContentToFile(toString(personToWinesDistMap), bloomFile);
     BloomLogger.log("See '" + personDistFile + "' & '" + wineDistFile + "'");
   }
 
+  private String toString(Map<String, Set<String>> personToWinesDistMap) {
+    StringBuffer sb = new StringBuffer();
+    sb.append(numSoldWines + "");
+
+    for (Entry<String, Set<String>> entry : personToWinesDistMap.entrySet()) {
+      sb.append(distributionToString(entry.getKey(), entry.getValue()));
+    }
+
+    return sb.toString();
+  }
+
+  private String distributionToString(String personId, Set<String> wineIds) {
+    StringBuffer sb = new StringBuffer();
+
+    for (String wineId : wineIds) {
+      sb.append("\n");
+      sb.append(personId);
+      sb.append("\t");
+      sb.append(wineId);
+    }
+
+    return sb.toString();
+  }
+
   private void decideDistribution() {
-    for (String wineId : wines) {
+    for (String wineId : wineToPersonsPrefMap.keySet()) {
       Set<String> interestedPersons = wineToPersonsPrefMap.get(wineId);
 
       // If none is interested
@@ -68,10 +106,9 @@ public class WineDistributor {
       }
     }
 
-    int numUnsoldWines = 0;
     for (Entry<String, Set<String>> entry : wineToPersonsDistMap.entrySet()) {
-      if (entry.getValue().isEmpty()) {
-        numUnsoldWines++;
+      if (!entry.getValue().isEmpty()) {
+        numSoldWines++;
       }
     }
 
@@ -82,7 +119,7 @@ public class WineDistributor {
       }
     }
 
-    BloomLogger.log("Num unsold wines: " + numUnsoldWines);
+    BloomLogger.log("Num sold wines: " + numSoldWines);
     BloomLogger.log("Num people with no wines: " + numPersonsWithNoWines);
   }
 
@@ -90,33 +127,13 @@ public class WineDistributor {
     return personToWinesDistMap.get(personId).size() >= 3;
   }
 
-  public void readFileSetupData() throws IOException {
-    List<String> lines = FileUtils.readFileIntoLines(filePath);
-    for (String line : lines) {
-      updateMaps(personToWinesPrefMap, wineToPersonsPrefMap,
-          personToWinesDistMap, wineToPersonsDistMap, line);
-    }
-
-    updateUsersAndWines();
-    decideDistribution();
-
-    BloomLogger.log("File read. Num lines: " + lines.size());
-    BloomLogger.log("Num unique users: " + users.size());
-    BloomLogger.log("Num unique wines: " + wines.size());
-  }
-
-  public void updateUsersAndWines() {
-    users = personToWinesPrefMap.keySet();
-    wines = wineToPersonsPrefMap.keySet();
-  }
-
   @VisibleForTesting
   protected void updateMaps(Map<String, Set<String>> personToWinesPrefsMap,
       Map<String, Set<String>> wineToPersonsPrefsMap,
       Map<String, Set<String>> personToWinesDistMap,
       Map<String, Set<String>> wineToPersonsDistMap, String prefLine) {
-    Preference preference = getPreference(prefLine);
 
+    Preference preference = Preference.fromString(prefLine);
     if (preference == null) {
       return;
     }
@@ -139,19 +156,6 @@ public class WineDistributor {
       Set<String> value = Sets.newHashSet();
       map.put(key, value);
     }
-  }
-
-  @VisibleForTesting
-  protected Preference getPreference(String preferenceLine) {
-    Preference preference = null;
-    try {
-      preference = new Preference(preferenceLine);
-    } catch (WineException e) {
-      BloomLogger.log(Level.SEVERE, "Could not parse line: '" + preferenceLine
-          + "'. Skipping it");
-    }
-
-    return preference;
   }
 
 }
