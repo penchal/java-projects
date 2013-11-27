@@ -11,10 +11,3 @@
 	<context:annotation-config />
 
 </beans>
-
-
-<!-- 
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="prod/app.properties" />
-	</bean> -->

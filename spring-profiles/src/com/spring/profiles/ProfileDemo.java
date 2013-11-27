@@ -23,12 +23,6 @@ public class ProfileDemo {
   public static void main(String[] args) {
     GenericXmlApplicationContext context = new GenericXmlApplicationContext();
     context.getEnvironment().addActiveProfile("prod");
-
-    //    System.out.println("Active profiles: \n");
-    //    for (String profile : context.getEnvironment().getActiveProfiles()) {
-    //      System.out.println(profile);
-    //    }
-
     context.load("spring.xml");
     context.refresh();
 
