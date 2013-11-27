@@ -2,6 +2,7 @@ package com.spring.profiles;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -14,12 +15,14 @@ public class CommonConfiguration {
   protected ProdService prodService;
 
   @Qualifier("test")
-  private Service getTestService() {
+  @Bean
+  protected Service getTestService() {
     return testService;
   }
 
   @Qualifier("prod")
-  private Service getProdService() {
+  @Bean
+  protected Service getProdService() {
     return prodService;
   }
 
