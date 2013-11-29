@@ -9,16 +9,19 @@ import org.springframework.stereotype.Component;
 public class ProfileDemo {
 
   @Autowired
-  @Qualifier("serviceImpl")
-  private Service service;
+  @Qualifier("theDb")
+  private Database db;
 
   @Autowired
   @Qualifier("prod")
-  private Service prodService;
+  private Database prodDb;
 
   @Autowired
   @Qualifier("test")
-  private Service testService;
+  private Database testDb;
+
+  @Autowired
+  private Account  account;
 
   public static void main(String[] args) {
     GenericXmlApplicationContext context = new GenericXmlApplicationContext();
@@ -27,10 +30,13 @@ public class ProfileDemo {
     context.refresh();
 
     ProfileDemo demo = context.getBean(ProfileDemo.class);
-    demo.prodService.foo();
-    demo.testService.foo();
-    demo.service.foo();
 
+    // Test autowiring of databases based on profile
+    demo.prodDb.save(10);
+    demo.testDb.save(20);
+    demo.db.save(30);
+
+    demo.account.deposit(40);
     context.close();
   }
 

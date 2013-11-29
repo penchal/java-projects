@@ -3,27 +3,33 @@ package com.spring.profiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 public class CommonConfiguration {
 
   @Autowired
-  protected TestService testService;
+  protected TestDB testDb;
 
   @Autowired
-  protected ProdService prodService;
+  protected ProdDb prodDb;
 
-  @Qualifier("test")
   @Bean
-  protected Service getTestService() {
-    return testService;
+  @Qualifier("test")
+  protected Database getTestDb() {
+    return testDb;
   }
 
-  @Qualifier("prod")
   @Bean
-  protected Service getProdService() {
-    return prodService;
+  @Qualifier("prod")
+  protected Database getProdDb() {
+    return prodDb;
+  }
+
+  @Autowired
+  protected SavingsAccount savingsAccount;
+
+  @Bean
+  protected Account account() {
+    return savingsAccount;
   }
 
 }

@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Profile;
 @Profile("prod")
 public class ProdConfiguration extends CommonConfiguration {
 
-  @Qualifier("serviceImpl")
   @Bean
-  public Service get() {
-    return prodService;
+  @Qualifier("theDb")
+  public Database getTheDb() {
+    return prodDb;
   }
 
 }

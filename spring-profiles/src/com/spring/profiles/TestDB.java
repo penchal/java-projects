@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("singleton")
-public class ProdService implements Service {
+public class TestDB implements Database {
 
   @Override
-  public void foo() {
-    System.out.println("This is ProdService:foo()");
+  public void save(int money) {
+    System.out.println("This is TestDB:save(" + money + ")");
   }
 
 }
