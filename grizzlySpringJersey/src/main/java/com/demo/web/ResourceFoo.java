@@ -19,18 +19,18 @@ public class ResourceFoo {
   @Autowired
   MyBean myBean;
   
-  private String company;
+  private String username;
   
   @Path("time")
-  public ResourceFoo wta(@PathParam("company") String company) {
-    this.company = company;
+  public ResourceFoo wta(@PathParam("username") String username) {
+    this.username = username;
     return this;
   }
   
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response status() {
-    return Response.ok(myBean.getTime(company)).build();
+    return Response.ok(myBean.getTime(username)).build();
   }
 
 }
