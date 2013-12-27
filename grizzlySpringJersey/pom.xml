@@ -53,12 +53,6 @@
 			<artifactId>jersey-bundle</artifactId>
 			<version>1.17.1</version>
 		</dependency>
-		<!-- >>> For message body exception. To add @JsonIgnoreProperties to POJO; This also doesnt work -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency>
 		
 		<!--  Grizzly2 -->
 		<dependency>
