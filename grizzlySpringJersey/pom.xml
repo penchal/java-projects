@@ -8,8 +8,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.demo</groupId>
-	
-	<artifactId>backend-framework</artifactId>
+	<artifactId>rest-server</artifactId>
 	<version>1.0.1</version>
 	<description>demo: spring+jersey+grizzly</description>
 	
@@ -121,7 +120,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>com.demo.rest.RestServer</mainClass>
+							<mainClass>com.demo.web.MyServer</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
