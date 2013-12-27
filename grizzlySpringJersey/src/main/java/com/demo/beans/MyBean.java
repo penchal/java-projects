@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class MyBean {
   
-  public String getTime(String user) {
+  public MyBlob getTimeBlob(String user) {
     try {
       Thread.sleep(3 * 1000);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
     
-    return user + " asked time. It is now: " + (new Date()).toString();
+    return new MyBlob(new Date(), user + " asked time. It is now: " + (new Date()).toString());
   }
 
 }

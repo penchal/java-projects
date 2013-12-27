@@ -9,6 +9,7 @@ import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
 
+import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 
 
@@ -44,6 +45,7 @@ public class MyServer {
     reg.addMapping("/*");
 
     context.addContextInitParameter(CONTEXT_CONFIG_LOCATION, "classpath:applicationContext.xml");
+    context.addContextInitParameter(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     context.addListener("org.springframework.web.context.ContextLoaderListener");
     context.addListener("org.springframework.web.context.request.RequestContextListener");
     

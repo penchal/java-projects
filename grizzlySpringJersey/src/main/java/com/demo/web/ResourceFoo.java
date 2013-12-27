@@ -30,7 +30,7 @@ public class ResourceFoo {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response status() {
-    return Response.ok(myBean.getTime(username)).build();
+    return Response.ok(myBean.getTimeBlob(username)).build();
   }
 
 }
