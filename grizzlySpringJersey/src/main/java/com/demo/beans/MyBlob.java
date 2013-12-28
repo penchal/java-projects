@@ -6,6 +6,8 @@ public class MyBlob {
   
   private Date date;
   private String message;
+  
+  private MyBlob() {}
 
   public MyBlob(Date d, String message) {
     this.message = message;
