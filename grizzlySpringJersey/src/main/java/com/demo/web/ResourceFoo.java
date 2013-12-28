@@ -22,6 +22,8 @@ import com.sun.jersey.api.core.HttpContext;
 
 @Component
 @Path("/{username}")
+// TODO: There is an issue. Whatever is passed as username, first letter of that string is not copied into username.
+// Dont know why
 public class ResourceFoo {
   
   @Autowired

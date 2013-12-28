@@ -31,8 +31,8 @@ public class MyServer {
     server.start();
     
     System.out.println("In order to test the server please try the following urls:");
-    System.out.println("http://localhost:3388/smc/time to see time for smc");
-    System.out.println("http://localhost:3388/bsv/time to see time for bsv");
+    System.out.println("http://localhost:3388/ffriend1/time to see time for smc");
+    System.out.println("http://localhost:3388/ffriend2/time to see time for bsv");
 
     System.out.println("Press enter to stop the server...");
     System.in.read();
