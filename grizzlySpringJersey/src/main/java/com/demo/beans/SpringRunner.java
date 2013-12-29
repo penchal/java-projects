@@ -17,10 +17,10 @@ public class SpringRunner {
     GenericXmlApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
     
     BusinessLogic bean = context.getBean(com.demo.beans.BusinessLogic.class);
-    System.out.println(bean.getTimeBlob("Context"));
+    System.out.println(bean.getTimeFor("Context", "FromSpring"));
     
     SpringRunner runner = context.getBean(com.demo.beans.SpringRunner.class);
-    System.out.println(runner.myBean.getTimeBlob("Autowire"));
+    System.out.println(runner.myBean.getTimeFor("Autowire", "FromSpring"));
   }
 
 }

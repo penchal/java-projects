@@ -5,9 +5,7 @@ import java.util.Date;
 public class MyPojo {
   
   private Date date;
-  
   private String message;
-  
   private FRIEND_TYPE type;
   
   // NOTE: I tried commenting this; But this blasted! This is very much required

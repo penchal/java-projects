@@ -6,4 +6,6 @@ public interface Friend {
   
   void setName(String name);
   
+  void setSpecialMessage(String specialMessage);
+  
 }

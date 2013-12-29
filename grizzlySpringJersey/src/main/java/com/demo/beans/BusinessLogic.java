@@ -11,7 +11,7 @@ import com.demo.beans.MyPojo.FRIEND_TYPE;
 @Scope("prototype")
 public class BusinessLogic {
   
-  public MyPojo getTimeBlob(String name) {
+  public MyPojo getTimeFor(String name, String specialMessage) {
     try {
       Thread.sleep(3 * 1000);
     } catch (InterruptedException e) {
@@ -20,13 +20,15 @@ public class BusinessLogic {
     
     Friend friend = null;
     try {
-      friend = (Friend) Class.forName("com.demo.friends." + name + ".FriendImpl").newInstance();
+      String classNameToLookFor = "com.demo.friends." + name + ".FriendImpl";
+      friend = (Friend) Class.forName(classNameToLookFor).newInstance();
     } catch (InstantiationException | IllegalAccessException
         | ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
     
     friend.setName(name);
+    friend.setSpecialMessage(specialMessage);
     
     MyPojo myPojo = new MyPojo(new Date(), friend.getTime());
     myPojo.setType(FRIEND_TYPE.INTIMATE);
