@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class MyBean {
+public class BusinessLogicBean {
   
   public MyPojo getTimeBlob(String name) {
     try {
