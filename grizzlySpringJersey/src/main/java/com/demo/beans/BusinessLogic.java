@@ -5,9 +5,11 @@ import java.util.Date;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.demo.beans.MyPojo.FRIEND_TYPE;
+
 @Component
 @Scope("prototype")
-public class BusinessLogicBean {
+public class BusinessLogic {
   
   public MyPojo getTimeBlob(String name) {
     try {
@@ -25,7 +27,10 @@ public class BusinessLogicBean {
     }
     
     friend.setName(name);
+    
     MyPojo myPojo = new MyPojo(new Date(), friend.getTime());
+    myPojo.setType(FRIEND_TYPE.INTIMATE);
+    
     return myPojo;
   }
 

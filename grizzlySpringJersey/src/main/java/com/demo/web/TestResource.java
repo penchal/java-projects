@@ -8,14 +8,14 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.demo.beans.BusinessLogicBean;
+import com.demo.beans.BusinessLogic;
 
 @Component
 @Path("/test")
 public class TestResource {
 
   @Autowired
-  BusinessLogicBean bean;
+  BusinessLogic bean;
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)

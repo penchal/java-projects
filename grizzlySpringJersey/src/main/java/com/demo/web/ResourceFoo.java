@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.demo.beans.BusinessLogicBean;
+import com.demo.beans.BusinessLogic;
 import com.demo.beans.MyPojo;
 
 @Component
@@ -21,7 +21,7 @@ import com.demo.beans.MyPojo;
 public class ResourceFoo {
 
   @Autowired
-  BusinessLogicBean         myBean;
+  BusinessLogic         myBean;
 
   private String username;
 
