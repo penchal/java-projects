@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.demo.beans.MyBean;
-import com.demo.beans.MyBlob;
+import com.demo.beans.MyPojo;
 
 @Component
 @Path("/{username}")
@@ -55,7 +55,7 @@ public class ResourceFoo {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response status() {
-    MyBlob timeBlob = myBean.getTimeBlob(username);
+    MyPojo timeBlob = myBean.getTimeBlob(username);
     ResponseBuilder builder = Response.ok(timeBlob);
     return builder.build();
   }

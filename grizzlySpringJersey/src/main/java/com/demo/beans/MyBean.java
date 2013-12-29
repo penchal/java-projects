@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class MyBean {
   
-  public MyBlob getTimeBlob(String name) {
+  public MyPojo getTimeBlob(String name) {
     try {
       Thread.sleep(3 * 1000);
     } catch (InterruptedException e) {
@@ -18,13 +18,15 @@ public class MyBean {
     
     Friend friend = null;
     try {
-      friend = (Friend) Class.forName("com.demo.friends." + name + ".Friend1").newInstance();
+      friend = (Friend) Class.forName("com.demo.friends." + name + ".FriendImpl").newInstance();
     } catch (InstantiationException | IllegalAccessException
         | ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
     
-    return new MyBlob(new Date(), friend.getTime());
+    friend.setName(name);
+    MyPojo myPojo = new MyPojo(new Date(), friend.getTime());
+    return myPojo;
   }
 
 }

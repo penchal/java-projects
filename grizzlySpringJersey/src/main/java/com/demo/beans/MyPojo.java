@@ -2,14 +2,13 @@ package com.demo.beans;
 
 import java.util.Date;
 
-public class MyBlob {
+public class MyPojo {
   
   private Date date;
   
   public Date getDate() {
     return date;
   }
-
   
   public void setDate(Date date) {
     this.date = date;
@@ -27,9 +26,9 @@ public class MyBlob {
 
   private String message;
   
-  private MyBlob() {}
+  private MyPojo() {}
 
-  public MyBlob(Date d, String message) {
+  public MyPojo(Date d, String message) {
     this.message = message;
     this.date = d;
   }
