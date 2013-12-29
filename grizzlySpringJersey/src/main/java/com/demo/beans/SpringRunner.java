@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class SpringRunner {
   
   @Autowired
-  private MyBean myBean;
+  private BusinessLogic myBean;
 
   /**
    * @param args
@@ -16,11 +16,11 @@ public class SpringRunner {
   public static void main(String[] args) {
     GenericXmlApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
     
-    MyBean bean = context.getBean(com.demo.beans.MyBean.class);
-    System.out.println(bean.getTimeBlob("Context"));
+    BusinessLogic bean = context.getBean(com.demo.beans.BusinessLogic.class);
+    System.out.println(bean.getTimeFor("Context", "FromSpring"));
     
     SpringRunner runner = context.getBean(com.demo.beans.SpringRunner.class);
-    System.out.println(runner.myBean.getTimeBlob("Autowire"));
+    System.out.println(runner.myBean.getTimeFor("Autowire", "FromSpring"));
   }
 
 }

@@ -1,60 +1,62 @@
 package com.demo.web;
 
-import static com.sun.jersey.spi.spring.container.servlet.SpringServlet.CONTEXT_CONFIG_LOCATION;
-
 import java.io.IOException;
+import java.net.URI;
+
+import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.server.NetworkListener;
-import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
-
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
-
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ApplicationHandler;
 
 public class MyServer {
-  
-  /**
-   * @param args
-   * 
-   * @throws IOException 
-   */
-  public static void main(String[] args) throws IOException {
-    HttpServer server = new HttpServer();
-    
-    addHostPort(server);
-    
-    WebappContext webappContext = createWebappContext();
-    webappContext.deploy(server);
-    
-    server.start();
-    
-    System.out.println("In order to test the server please try the following urls:");
-    System.out.println("http://localhost:3388/smc/time to see time for smc");
-    System.out.println("http://localhost:3388/bsv/time to see time for bsv");
 
+  public static final URI BASE_URI = getBaseURI();
+
+  private static URI getBaseURI() {
+    return UriBuilder.fromUri("http://localhost/").port(3388).build();
+  }
+
+  public static void main(String[] args) throws IOException {
+    //    HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI,
+    //        new ApplicationHandler(new MyApplication()), true,
+    //        getSslEngineConfiguration());
+
+    ApplicationHandler appHandler = new ApplicationHandler(new MyApplication());
+    HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI,
+        appHandler, false);
+
+    WebappContext context = new WebappContext("REST Server - Context",
+        "/WEB-INF/web.xml");
+    context.deploy(httpServer);
+    httpServer.start();
+
+    System.out
+        .println("In order to test the server please try the following urls:");
+    String[] urls = {
+        "http://localhost:3388/test",
+        "http://localhost:3388/pandu/time",
+        // "http://localhost:3388/rakesh/time",
+        "http://localhost:3388/rakesh/time/?urgency=true",
+        "http://localhost:3388/rakesh/time/?urgency=true&requestMode=async"
+    };
+    for (String url : urls) {
+      System.out.println(url);
+    }
+    
     System.out.println("Press enter to stop the server...");
     System.in.read();
   }
-  
-  private static WebappContext createWebappContext() {
-    WebappContext context = new WebappContext("DEMO REST Server WebappContext", "/");
-    
-    final ServletRegistration reg = context.addServlet("spring", new SpringServlet());
-    reg.addMapping("/*");
 
-    context.addContextInitParameter(CONTEXT_CONFIG_LOCATION, "classpath:applicationContext.xml");
-    context.addContextInitParameter(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
-    context.addListener("org.springframework.web.context.ContextLoaderListener");
-    context.addListener("org.springframework.web.context.request.RequestContextListener");
-    
-    return context;
-  }
-  
-  private static void addHostPort(HttpServer server) {
-    NetworkListener listener = new NetworkListener("grizzly2", "localhost", 3388);
-    server.addListener(listener);
-  }
+  //  private static SSLEngineConfigurator getSslEngineConfiguration() {
+  //    SSLContextConfigurator sslContext = new SSLContextConfigurator();
+  //    sslContext.setKeyStoreFile("keystore_server");
+  //    sslContext.setKeyStorePass("mobolt_password");
+  //    SSLEngineConfigurator sslConfig = new SSLEngineConfigurator(sslContext);
+  //    sslConfig.setClientMode(false);
+  //    sslConfig.setNeedClientAuth(false);
+  //    return sslConfig;
+  //  }
 
 }
