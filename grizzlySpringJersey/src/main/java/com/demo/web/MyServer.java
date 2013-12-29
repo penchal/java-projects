@@ -36,7 +36,9 @@ public class MyServer {
         .println("In order to test the server please try the following urls:");
     System.out.println("http://localhost:3388/test");
     System.out.println("http://localhost:3388/pandu/time");
-    System.out.println("http://localhost:3388/rakesh/time");
+    
+    // System.out.println("http://localhost:3388/rakesh/time");
+    System.out.println("http://localhost:3388/rakesh/time/?urgency=true");
 
     System.out.println("Press enter to stop the server...");
     System.in.read();
