@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import com.demo.beans.BusinessLogic;
 import com.demo.beans.MyPojo;
-import com.google.common.collect.Multiset.Entry;
 
 @Component
 @Path("/{friendName}")
@@ -35,6 +34,10 @@ public class MyResource {
   @QueryParam("urgency")
   boolean urgency;
   
+  @DefaultValue("AGNOSTIC")
+  @QueryParam("requestMode")
+  RequestMode requestMode;
+  
   private String friendName;
 
   @Context
@@ -42,8 +45,6 @@ public class MyResource {
 
   @Path("time")
   public MyResource time(@PathParam("friendName") String friendName) {
-    System.out.println("Urgency(from info): " + info.getQueryParameters().getFirst("urgency"));
-    System.out.println("Urgency(from injection): " + urgency);
     printContext();
     
     this.friendName = friendName;
@@ -53,12 +54,19 @@ public class MyResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response status() {
-    MyPojo timeBlob = businessLogic.getTimeFor(friendName, "urgency=" + urgency);
+    String specialMessage = "urgency=" + urgency + "; requestMode=" + requestMode;
+    MyPojo timeBlob = businessLogic.getTimeFor(friendName, specialMessage);
     ResponseBuilder builder = Response.ok(timeBlob);
     return builder.build();
   }
 
   private void printContext() {
+    System.out.println("Urgency(from info): " + info.getQueryParameters().getFirst("urgency"));
+    System.out.println("Urgency(from injection): " + urgency);
+    
+    System.out.println("RequestMode(from info): " + info.getQueryParameters().getFirst("requestMode"));
+    System.out.println("RequestMode(from injection): " + requestMode);
+    
     System.out.println("\n\nPath : " + info.getPath());
     
     System.out.println("\n\nPath parameters: ");
