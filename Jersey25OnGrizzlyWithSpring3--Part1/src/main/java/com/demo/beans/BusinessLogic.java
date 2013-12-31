@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 import com.demo.beans.MyPojo.FRIEND_TYPE;
 
 @Component
-@Scope("prototype")
+@Scope("singleton")
 public class BusinessLogic {
   
   public MyPojo getTimeFor(String name, String specialMessage) {
+    System.out.println("Hashcode: " + this.hashCode());
+    
     try {
       Thread.sleep(3 * 1000);
     } catch (InterruptedException e) {

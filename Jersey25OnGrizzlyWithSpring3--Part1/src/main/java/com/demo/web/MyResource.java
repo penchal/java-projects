@@ -1,6 +1,7 @@
 package com.demo.web;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.glassfish.grizzly.http.HttpContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,16 +34,23 @@ public class MyResource {
   // NOTE: Always use queryparams via injection. U ll get default value
   @DefaultValue("false")
   @QueryParam("urgency")
-  boolean urgency;
+  private boolean urgency;
+  
+  @DefaultValue("NOT_PASSED")
+  @QueryParam("key")
+  private String key;
   
   @DefaultValue("AGNOSTIC")
   @QueryParam("requestMode")
-  RequestMode requestMode;
+  private RequestMode requestMode;
   
   private String friendName;
 
   @Context
   private UriInfo info;
+  
+  @Context
+  private HttpContext context;
 
   @Path("time")
   public MyResource time(@PathParam("friendName") String friendName) {
@@ -54,6 +63,8 @@ public class MyResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response status() {
+    printContext();
+    
     String specialMessage = "urgency=" + urgency + "; requestMode=" + requestMode;
     MyPojo timeBlob = businessLogic.getTimeFor(friendName, specialMessage);
     ResponseBuilder builder = Response.ok(timeBlob);
@@ -61,10 +72,13 @@ public class MyResource {
   }
 
   private void printContext() {
-    System.out.println("Urgency(from info): " + info.getQueryParameters().getFirst("urgency"));
+    MultivaluedMap<String, String> qParams = info.getQueryParameters();
+    
+    System.out.println("\n\n<<<>>> CONTEXT <<<>>>");
+    System.out.println("Urgency(from URL): " + qParams.getFirst("urgency"));
     System.out.println("Urgency(from injection): " + urgency);
     
-    System.out.println("RequestMode(from info): " + info.getQueryParameters().getFirst("requestMode"));
+    System.out.println("RequestMode(from URL): " + qParams.getFirst("requestMode"));
     System.out.println("RequestMode(from injection): " + requestMode);
     
     System.out.println("\n\nPath : " + info.getPath());
@@ -80,6 +94,13 @@ public class MyResource {
     for (PathSegment pathSegment : segments) {
       System.out.println(pathSegment.getPath());
     }
+    
+    System.out.println("\n\nQuery parameters: ");
+    for (Entry<String, List<String>> e : qParams.entrySet()) {
+      System.out.println(e.getKey() + "---" + e.getValue());
+    }
+    
+    System.out.println("\n\n<<<>>> END OF CONTEXT <<<>>>");
   }
 
 }

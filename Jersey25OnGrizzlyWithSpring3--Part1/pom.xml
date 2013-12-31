@@ -22,16 +22,6 @@
 		<!-- SPRING FRAMEWORK -->
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>3.2.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>3.2.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>3.2.4.RELEASE</version>
 		</dependency>
@@ -61,6 +51,12 @@
 			<artifactId>jersey-container-grizzly2-servlet</artifactId>
 			<version>2.5</version>
 		</dependency>
+		
+	<!-- 	<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-common</artifactId>
+			<version>2.1</version>
+		</dependency> -->
 
 		<!--  SPRING INTEGRATION -->
 		<dependency>
@@ -75,8 +71,18 @@
 			<artifactId>jersey-media-moxy</artifactId>
 			<version>2.5</version>
 		</dependency>
-
+	    <dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>2.5</version>
+		</dependency>
 		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+			<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>3.1.2.RELEASE</version>

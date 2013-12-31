@@ -6,6 +6,7 @@ import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.servlet.WebappContext;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ApplicationHandler;
@@ -19,34 +20,46 @@ public class MyServer {
   }
 
   public static void main(String[] args) throws IOException {
-    //    HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI,
-    //        new ApplicationHandler(new MyApplication()), true,
-    //        getSslEngineConfiguration());
+    deployAsGrizzlyHttpServer();
+    // deployWithWebappContext();
 
-    ApplicationHandler appHandler = new ApplicationHandler(new MyApplication());
-    HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI,
-        appHandler, false);
+    printServerTestUrls();
 
-    WebappContext context = new WebappContext("REST Server - Context",
+    System.out.println("\n\n\nPress enter to stop the server...");
+    System.in.read();
+  }
+
+  // NOTE: DOESNT WORK
+  @SuppressWarnings("unused")
+  private static void deployWithWebappContext() throws IOException {
+    HttpServer httpServer = new HttpServer();
+    httpServer.addListener(new NetworkListener("GrizzlyServer",
+        "http://localhost/", 3388));
+    String servletContextName = "REST Server - Context";
+    WebappContext context = new WebappContext(servletContextName,
         "/WEB-INF/web.xml");
     context.deploy(httpServer);
-    httpServer.start();
+  }
 
+  private static void deployAsGrizzlyHttpServer() throws IOException {
+    MyApplication application = new MyApplication();
+    ApplicationHandler appHandler = new ApplicationHandler(application);
+    HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI,
+        appHandler, false);
+    httpServer.start();
+  }
+
+  private static void printServerTestUrls() {
     System.out
         .println("In order to test the server please try the following urls:");
-    String[] urls = {
-        "http://localhost:3388/test",
+    String[] urls = { "http://localhost:3388/test",
         "http://localhost:3388/pandu/time",
-        // "http://localhost:3388/rakesh/time",
+        "http://localhost:3388/rakesh/time",
         "http://localhost:3388/rakesh/time/?urgency=true",
-        "http://localhost:3388/rakesh/time/?urgency=true&requestMode=async"
-    };
+        "http://localhost:3388/rakesh/time/?urgency=true&requestMode=async" };
     for (String url : urls) {
       System.out.println(url);
     }
-    
-    System.out.println("Press enter to stop the server...");
-    System.in.read();
   }
 
   //  private static SSLEngineConfigurator getSslEngineConfiguration() {
