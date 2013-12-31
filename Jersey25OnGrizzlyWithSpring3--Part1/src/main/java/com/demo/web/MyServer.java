@@ -2,6 +2,7 @@ package com.demo.web;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -10,6 +11,8 @@ import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.servlet.WebappContext;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ApplicationHandler;
+
+import com.google.common.collect.Maps;
 
 public class MyServer {
 
@@ -24,7 +27,6 @@ public class MyServer {
     // deployWithWebappContext();
 
     printServerTestUrls();
-
     System.out.println("\n\n\nPress enter to stop the server...");
     System.in.read();
   }
@@ -43,6 +45,13 @@ public class MyServer {
 
   private static void deployAsGrizzlyHttpServer() throws IOException {
     MyApplication application = new MyApplication();
+    
+    Map<String, Object> properties = Maps.newHashMap();
+    properties.put("jersey.config.server.tracing", org.glassfish.jersey.server.TracingConfig.ALL);
+    properties.put("jersey.config.server.tracing", org.glassfish.jersey.server.TracingConfig.ALL);
+    properties.put("jersey.config.server.tracing.threshold", org.glassfish.jersey.message.internal.TracingLogger.Level.VERBOSE);
+    application.addProperties(properties);
+    
     ApplicationHandler appHandler = new ApplicationHandler(application);
     HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI,
         appHandler, false);
