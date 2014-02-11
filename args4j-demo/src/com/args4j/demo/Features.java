@@ -9,8 +9,8 @@ import org.kohsuke.args4j.Option;
 
 public class Features {
 
-  @Option(name = "--enableAuth", required = true, aliases = { "-enableAuth" }, usage = "Enable/Disable authentication")
-  public boolean enableAuth = true;
+  @Option(name = "--disableAuth", required = true, aliases = { "-disableAuth" }, usage = "Disable authentication")
+  public boolean disableAuth = false;
 
   public Features(String... args) {
     CmdLineParser parser = new CmdLineParser(this);
@@ -24,12 +24,12 @@ public class Features {
     }
   }
 
-  public boolean isEnableAuth() {
-    return enableAuth;
+  public boolean isDisableAuth() {
+    return disableAuth;
   }
 
-  public void setEnableAuth(boolean enableAuth) {
-    this.enableAuth = enableAuth;
+  public void setDisableAuth(boolean disableAuth) {
+    this.disableAuth = disableAuth;
   }
 
 }
